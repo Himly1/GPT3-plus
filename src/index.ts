@@ -45,21 +45,20 @@ export type setUpConfig = {
 };
 
 export class Gpt3Plus {
-  constructor(config: setUpConfig) {
-      setUp(
-        config.apiKey,
-        config.precentForContext,
-        config.precentForConversations,
-        config.promptOutputTokens,
-        config.contextSentenceSplitor,
-        config.completationMOdelMaxTokens,
-        config.useEmbeddingsOnlyTheCorrelationGreaterThanOrEqualTo,
-        config.completationModelName,
-      );
+  async init(config: setUpConfig) {
+    await setUp(
+      config.apiKey,
+      config.precentForContext,
+      config.precentForConversations,
+      config.promptOutputTokens,
+      config.contextSentenceSplitor,
+      config.completationMOdelMaxTokens,
+      config.useEmbeddingsOnlyTheCorrelationGreaterThanOrEqualTo,
+      config.completationModelName,
+    );
   }
 
   async talk(content: string, template: Template): Promise<string> {
     return await talkToAPI(content, template);
   }
 }
-

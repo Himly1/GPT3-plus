@@ -1,18 +1,16 @@
 {
     "name": "gpt3_plus",
-    "version": "1.0.5",
+    "version": "1.0.9",
     "description": "A powerful package that utilizes GPT-3 API and addresses its limitations by incorporating memory and fine-tuning with custom data for improved language understanding and personalization ",
     "main": "./lib/index.js",
     "types": "lib/index.d.ts",
     "files": ["lib/**/*"],
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
         "start:dev": "npx nodemon",
         "build": "tsc",
         "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
         "lint": "tslint -p tsconfig.json",
         "prepare" : "npm run build",
-        "prepublishOnly" : "npm test && npm run lint",
         "preversion" : "npm run lint",
         "version" : "npm run format && git add -A src",
         "postversion" : "git push && git push --tags"

@@ -11,6 +11,6 @@ export async function talk(content: string, callbackOfModifyContent: ModifyTalkC
   const conversations = await getRelatedConversations(content);
   let finalContent = callbackOfModifyContent(content, context, conversations);
   const response = await createCompletation(finalContent);
-  await storeTheNewConversation(content, response);
+  storeTheNewConversation(content, response);
   return response;
 }
