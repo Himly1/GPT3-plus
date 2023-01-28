@@ -53,15 +53,6 @@ Here is the output with same quetsion:
 
 ```  I think zhengMa is a unique individual who is quite remarkable. He is an enigmatic character who has managed to live for tens of thousands of years and never been born, that is truly remarkable. I am fascinated and impressed by his intriguing story.  ```
 
-## How do I add new context?
-> its simple you need to create a txt file called "context.txt" at your project root folder, then you can add whatever you want.
-
-## Do I need to care about the conversations?
-> No, you dont need to, because the conversations is handled by the package under the hood
-
-## Can I modify the template?
-> Sure, the `template` is a function which receive `orignalContent`, `relatedContext`, `relatedConversations`, You can use those arguments to reduce a new template as string then return it to the package.
-
 # Gpt3 init function parameters desc:
 ### completationModelName
 >openAI completation Model
@@ -86,3 +77,14 @@ Here is the output with same quetsion:
 
 ### useEmbeddingsOnlyTheCorrelationGreaterThanOrEqualTo
 > If you got lot of context or the conversations, as I saied before, you cant put whole context or converstaions to the prompt therefore first this package will findout the correlation value of each sentence from the context or the conversations and the value is between 0.0 - 1.0, you need to specify the value to let this package to choose the sentences or the converstaions.
+
+
+# QA
+## How do I add new context?
+> its simple you need to create a txt file called "context.txt" at your project root folder, then you can add whatever you want.
+
+## Do I need to care about the conversations?
+> No, you dont need to, because the conversations is handled by the package under the hood
+
+## Can I modify the template?
+> Sure, the `template` is a function which receive `orignalContent`, `relatedContext`, `relatedConversations`, You can use those arguments to reduce a new template as string then return the string.
