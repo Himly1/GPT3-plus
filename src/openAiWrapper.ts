@@ -3,7 +3,7 @@ import {Configuration, OpenAIApi}  from 'openai'
 
 let ai:OpenAIApi | undefined = undefined
 const embeddingModel = "text-embedding-ada-002"
-const completationModel = "text-davinci-003"
+let  completationModel = "text-davinci-003"
 let maxTokens: number =  200
 
 export async function createEmbeddings(content: string): Promise<any> {
@@ -27,8 +27,9 @@ export async function createCompletation(content: string): Promise<string> {
    return rs.data.choices[0].text
 }
 
-export async function init(openAIKey: string, maxTokensOnCompletation: number): Promise<void> {
+export async function init(openAIKey: string, maxTokensOnCompletation: number, completationModelName: string): Promise<void> {
     const conf = new Configuration({"apiKey": openAIKey})
     ai = new OpenAIApi(conf)
     maxTokens = maxTokensOnCompletation
+    completationModel = completationModelName
 }
