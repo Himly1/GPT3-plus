@@ -173,7 +173,7 @@ async function embeddingTheNewContext(embs: any): Promise<Object> {
   return rs;
 }
 
-const pathOfContextEmb = path.resolve(cwd(), 'contextEmb.json')
+const pathOfContextEmb = './contextEmb.json'
 async function writeContextEmbToLocal(embs: Object): Promise<void> {
   fs.writeFileSync(pathOfContextEmb, JSON.stringify(embs), { encoding: 'utf-8' });
 }
@@ -190,7 +190,7 @@ async function loadContextEmb(): Promise<Object> {
   return Promise.resolve(embs);
 }
 
-const pathOfConversationsEmb = path.resolve(cwd(), 'conversationsEmb.json')
+const pathOfConversationsEmb = './conversationsEmb.json'
 async function loadConversationsEmb(): Promise<any[][]> {
   if(!fs.existsSync(pathOfConversationsEmb)) {
     await writeConversationsEmbToLocal()

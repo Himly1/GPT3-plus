@@ -1,6 +1,6 @@
 {
     "name": "gpt3_plus",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "A powerful package that utilizes GPT-3 API and addresses its limitations by incorporating memory and fine-tuning with custom data for improved language understanding and personalization ",
     "main": "./lib/index.js",
     "types": "lib/index.d.ts",
