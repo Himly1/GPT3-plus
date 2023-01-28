@@ -15,7 +15,7 @@ So with this package the dataset and the conversations will be convert to Embedd
 > its simple you need to create a txt file called "context.txt" at your project root folder, then you can add whatever you want.
 
 ## Do I need to care about the conversations?
-> No, you dont need to, because the conversations is handled by the package itslef.
+> No, you dont need to, because the conversations is handled by the package under the hood
 
 ## Can I modify the template?
 > Sure, the `template` is a function which receive `orignalContent`, `relatedContext`, `relatedConversations`, You can use those arguments to reduce a new template as string then return it to the package.
