@@ -16,7 +16,7 @@ Q: ###Question
 `
 }
 
-export const templates = {
+export const Templates = {
     "default": (originalContext: string, relatedContext: string[], relatedConversations: string[][]) => {
         const template = textTemplates.default
         let finalContent = template.replace("###Context", relatedContext.join('\n'))
@@ -29,10 +29,22 @@ export const templates = {
     }
 }
 
-export class gpt3Plus {
-    constructor(apiKey: string, precentForContext: number, precentForConversations: number, promptOutputTokens: number, contextSentenceSplitor: string, completationModelMaxTokens: number, useContextOnlyTheSimilarityGreaterThanOrEqualTo: number) {
+export type setUpConfig = {
+    completationModelName: string,
+    apiKey: string,
+    precentForContext: number,
+    precentForConversations: number,
+    promptOutputTokens: number,
+    contextSentenceSplitor: string,
+    completationMOdelMaxTokens: number,
+    useEmbeddingsOnlyTheCorrelationGreaterThanOrEqualTo: number
+}
+
+
+export class Gpt3Plus {
+    constructor(config: setUpConfig) {
         (async () => {
-            //await setUp(apiKey, precentForContext, precentForConversations, promptOutputTokens, contextSentenceSplitor, completationModelMaxTokens, useContextOnlyTheSimilarityGreaterThanOrEqualTo)
+            await setUp(config.apiKey,config.precentForContext, config.precentForConversations, config.promptOutputTokens, config.contextSentenceSplitor, config.completationMOdelMaxTokens, config.useEmbeddingsOnlyTheCorrelationGreaterThanOrEqualTo, config.completationModelName)
         })
     }
 
