@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { createEmbeddings } from './openAiWrapper';
 import { dot } from 'mathjs';
+import * as path from 'path'
 
 let contextEmb: any = {};
 let conversationsEmb: any[][] = [[]];
@@ -132,8 +133,15 @@ export async function storeTheNewConversation(question: string, answer: string):
   await writeConversationsEmbToLocal();
 }
 
-const pathOfContext = './context.txt';
+const pathOfContext = path.join(__dirname, '..','./context.txt');
+async function createContextTxtFile() {
+  fs.writeFileSync(pathOfContext, "", {encoding: 'utf-8'})
+}
+
 async function loadContextAsSentences(): Promise<string[]> {
+  if(!fs.existsSync(pathOfContext)) {
+    await createContextTxtFile()
+  }
   const strs = fs.readFileSync(pathOfContext, { encoding: 'utf-8' });
   const lines = strs.split('\n').filter((line) => {
     return line.trim().length !== 0;
@@ -164,12 +172,15 @@ async function embeddingTheNewContext(embs: any): Promise<Object> {
   return rs;
 }
 
-const pathOfContextEmb = './contextEmb.json';
+const pathOfContextEmb = path.join(__dirname, '..','./contextEmb.json');
 async function writeContextEmbToLocal(embs: Object): Promise<void> {
   fs.writeFileSync(pathOfContextEmb, JSON.stringify(embs), { encoding: 'utf-8' });
 }
 
 async function loadContextEmb(): Promise<Object> {
+  if(!fs.existsSync(pathOfContextEmb)) {
+    await writeContextEmbToLocal({})
+  }
   const embsInStr = fs.readFileSync(pathOfContextEmb, { encoding: 'utf-8' });
   let embs = JSON.parse(embsInStr);
   const newEmbs = await embeddingTheNewContext(embs);
@@ -178,8 +189,11 @@ async function loadContextEmb(): Promise<Object> {
   return Promise.resolve(embs);
 }
 
-const pathOfConversationsEmb = './conversationsEmb.json';
+const pathOfConversationsEmb = path.join(__dirname, '..', './conversationsEmb.json');
 async function loadConversationsEmb(): Promise<any[][]> {
+  if(!fs.existsSync(pathOfConversationsEmb)) {
+    await writeConversationsEmbToLocal()
+  }
   const embInStr = fs.readFileSync(pathOfConversationsEmb, { encoding: 'utf-8' });
   return Promise.resolve(JSON.parse(embInStr));
 }

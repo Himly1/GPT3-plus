@@ -13,6 +13,7 @@ Conversations-log
 ###conversations
 
 Q: ###Question
+A:
 `,
 };
 
@@ -45,7 +46,6 @@ export type setUpConfig = {
 
 export class Gpt3Plus {
   constructor(config: setUpConfig) {
-    async () => {
       setUp(
         config.apiKey,
         config.precentForContext,
@@ -56,10 +56,10 @@ export class Gpt3Plus {
         config.useEmbeddingsOnlyTheCorrelationGreaterThanOrEqualTo,
         config.completationModelName,
       );
-    };
   }
 
   async talk(content: string, template: Template): Promise<string> {
     return await talkToAPI(content, template);
   }
 }
+
