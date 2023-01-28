@@ -1,15 +1,15 @@
 import * as fs from 'fs'
-import {createEmbeddings} from './openAiWrapper'
-import {dot} from 'mathjs'
+import { createEmbeddings } from './openAiWrapper'
+import { dot } from 'mathjs'
 
-let  contextEmb: any  = {}
-let  conversationsEmb: any[][] = [[]]
-let  precentageOfContext: number  = 0.5
+let contextEmb: any = {}
+let conversationsEmb: any[][] = [[]]
+let precentageOfContext: number = 0.5
 let precentageOfConversations: number = 0.3
 let splitorForSplitContextAsSentence: string = "。"
 let modelMaxTokens: number = 0
 let maxTokenOfCompletationOutput: number = 200
-let takeContextOnlySimilarityGoeTo: number =  0.83
+let takeContextOnlySimilarityGoeTo: number = 0.83
 
 function findSimilarity(x: number[], y: number[]) {
     return dot(x, y)
@@ -33,15 +33,15 @@ async function findTheRelatedSentences(content: string): Promise<string[]> {
         const similarityOfB = b[0]
         return (similarityOfA * 100) - (similarityOfB * 100)
     })
-    const reversedSimilarityAndSentence  = similarityAndSentence.reverse()
-    const relatedSentences :string[] = []
+    const reversedSimilarityAndSentence = similarityAndSentence.reverse()
+    const relatedSentences: string[] = []
     let tokensCount = 0
-    for(const [similarity, sentence] of reversedSimilarityAndSentence) {
-        if(tokensCount + sentence.length  >= contextMaxTokens) {
+    for (const [similarity, sentence] of reversedSimilarityAndSentence) {
+        if (tokensCount + sentence.length >= contextMaxTokens) {
             break
         }
 
-        if(similarity >= takeContextOnlySimilarityGoeTo) {
+        if (similarity >= takeContextOnlySimilarityGoeTo) {
             relatedSentences.push(sentence)
             tokensCount += sentence.length
         }
@@ -56,9 +56,9 @@ export async function getRelatedContext(content: string): Promise<string[]> {
 }
 
 async function findRelatedConversations(maxTokens: number, contentEmb: number[], conversations: any[][]): Promise<any[]> {
-    const relatedConversations =  conversationsEmb.reduce((rs, [emb, question, answer], index) => {
+    const relatedConversations = conversationsEmb.reduce((rs, [emb, question, answer], index) => {
         const similarity = findSimilarity(emb, contentEmb)
-        if(similarity >= takeContextOnlySimilarityGoeTo) {
+        if (similarity >= takeContextOnlySimilarityGoeTo) {
             rs.push([index, question, answer])
             conversations[index] = [emb, question, answer, true]
         }
@@ -70,8 +70,8 @@ async function findRelatedConversations(maxTokens: number, contentEmb: number[],
 
     const rs = []
     let tokensCount = 0
-    for(const [_, question, answer] of relatedConversations) {
-        if( (tokensCount + question.length + answer.length) >= maxTokens) {
+    for (const [_, question, answer] of relatedConversations) {
+        if ((tokensCount + question.length + answer.length) >= maxTokens) {
             break
         }
 
@@ -86,12 +86,12 @@ async function getConversationsInOrder(maxTokens: number, conversations: any[][]
     conversations.reverse()
     let tokensCount = 0
     const rs = []
-    for(const [_, question, answer, usedBefore] of conversations) {
-        if(usedBefore !== undefined) {
+    for (const [_, question, answer, usedBefore] of conversations) {
+        if (usedBefore !== undefined) {
             continue
         }
 
-        if(tokensCount + question.length + answer.length >= maxTokens) {
+        if (tokensCount + question.length + answer.length >= maxTokens) {
             break
         }
 
@@ -106,7 +106,7 @@ async function getConversationsInOrder(maxTokens: number, conversations: any[][]
 
 export async function getRelatedConversations(content: string): Promise<string[][]> {
     const embOfTheContent = await createEmbeddings(content)
-    let  maxTokens = (modelMaxTokens - maxTokenOfCompletationOutput) * precentageOfConversations
+    let maxTokens = (modelMaxTokens - maxTokenOfCompletationOutput) * precentageOfConversations
     maxTokens = parseInt(maxTokens.toString())
     const conversations = [...conversationsEmb]
     const [relatedConversations, tokensTaken] = await findRelatedConversations(maxTokens, embOfTheContent, conversations)
@@ -116,14 +116,14 @@ export async function getRelatedConversations(content: string): Promise<string[]
 }
 
 async function writeConversationsEmbToLocal() {
-    fs.writeFileSync(pathOfConversationsEmb, JSON.stringify(conversationsEmb), {"encoding": 'utf-8'})
+    fs.writeFileSync(pathOfConversationsEmb, JSON.stringify(conversationsEmb), { "encoding": 'utf-8' })
 }
 
-export async function storeTheNewConversation(question: string, answer: string):Promise<void> {
+export async function storeTheNewConversation(question: string, answer: string): Promise<void> {
     const conversationInStr = question + answer
-    const emb  =  await createEmbeddings(conversationInStr)
+    const emb = await createEmbeddings(conversationInStr)
     conversationsEmb.push([emb, question, answer])
-    if(conversationsEmb.length > 10) {
+    if (conversationsEmb.length > 10) {
         conversationsEmb.shift()
     }
     await writeConversationsEmbToLocal()
@@ -131,14 +131,14 @@ export async function storeTheNewConversation(question: string, answer: string):
 
 const pathOfContext = "./context.txt"
 async function loadContextAsSentences(): Promise<string[]> {
-    const strs = fs.readFileSync(pathOfContext, {"encoding": 'utf-8'})
+    const strs = fs.readFileSync(pathOfContext, { "encoding": 'utf-8' })
     const lines = strs.split('\n').filter((line) => {
         return line.trim().length !== 0
     })
     const sentences = lines.reduce((sentences: string[], line: String) => {
-	const sentencesFromTheLine  = line.split(splitorForSplitContextAsSentence)
-	sentences.push(...sentencesFromTheLine)
-	return sentences
+        const sentencesFromTheLine = line.split(splitorForSplitContextAsSentence)
+        sentences.push(...sentencesFromTheLine)
+        return sentences
     }, [])
     return sentences
 }
@@ -146,43 +146,43 @@ async function loadContextAsSentences(): Promise<string[]> {
 
 async function embeddingTheNewContext(embs: any): Promise<Object> {
     const sentences = await loadContextAsSentences()
-    const unembeddingSentences =  sentences.filter((val) => {
-        return embs[val] ===  undefined
+    const unembeddingSentences = sentences.filter((val) => {
+        return embs[val] === undefined
     })
     let rs: any = {}
 
-    for(const sentence of unembeddingSentences) {
-        if(sentence.trim().length === 0) {
+    for (const sentence of unembeddingSentences) {
+        if (sentence.trim().length === 0) {
             continue
         }
         const emb = await createEmbeddings(sentence)
         rs[sentence] = emb
     }
-    
+
     return rs
 }
 
 const pathOfContextEmb = "./contextEmb.json"
-async function writeContextEmbToLocal(embs: Object):Promise<void> {
-    fs.writeFileSync(pathOfContextEmb, JSON.stringify(embs), {"encoding": 'utf-8'})
+async function writeContextEmbToLocal(embs: Object): Promise<void> {
+    fs.writeFileSync(pathOfContextEmb, JSON.stringify(embs), { "encoding": 'utf-8' })
 }
 
-async function loadContextEmb():Promise<Object> {
-    const embsInStr = fs.readFileSync(pathOfContextEmb, {"encoding": 'utf-8'})
+async function loadContextEmb(): Promise<Object> {
+    const embsInStr = fs.readFileSync(pathOfContextEmb, { "encoding": 'utf-8' })
     let embs = JSON.parse(embsInStr)
-    const newEmbs =  await embeddingTheNewContext(embs)
+    const newEmbs = await embeddingTheNewContext(embs)
     embs = Object.assign(embs, newEmbs)
     await writeContextEmbToLocal(embs)
     return Promise.resolve(embs)
 }
 
 const pathOfConversationsEmb = "./conversationsEmb.json"
-async function loadConversationsEmb():Promise<any[][]> {
-    const embInStr = fs.readFileSync(pathOfConversationsEmb, {"encoding": 'utf-8'})
+async function loadConversationsEmb(): Promise<any[][]> {
+    const embInStr = fs.readFileSync(pathOfConversationsEmb, { "encoding": 'utf-8' })
     return Promise.resolve(JSON.parse(embInStr))
 }
 
-type ModelArgs  = {
+type ModelArgs = {
     maxTokens: number
     outputMaxTokens: number
 }

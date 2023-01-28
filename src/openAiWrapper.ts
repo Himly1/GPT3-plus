@@ -1,4 +1,6 @@
 import { Configuration, OpenAIApi } from 'openai'
+import { AxiosError } from 'axios'
+
 
 
 let ai: OpenAIApi | undefined = undefined
@@ -7,23 +9,18 @@ let completationModel = "text-davinci-003"
 let maxTokens: number = 200
 
 export async function createEmbeddings(content: string): Promise<any> {
-    Promise.resolve(setTimeout(() => {
-    }, 1000))
     try {
+        new Promise(resolve => setTimeout(resolve, 1000))
         const rs = await ai?.createEmbedding({ 'model': embeddingModel, "input": content, 'user': 'default' })
         return rs?.data.data[0].embedding
     } catch (error) {
-        console.error(`Error occurred while embedding the content. The content is ${content}, The error is ${error}`)
-        if (error.response) {
-            if(error.response.status === 429) {
-                await Promise.resolve(setTimeout(() => {
-                    
-                }, 2000))
-                return await createEmbeddings(content)
-            }
-
-            throw error
+        const ex = error as AxiosError
+        const status = ex.response?.status
+        if(status === 429 || status === 502) {
+            return await createEmbeddings(content)
         }
+
+        throw error
     }
 }
 

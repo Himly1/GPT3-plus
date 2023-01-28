@@ -32,7 +32,7 @@ export const templates = {
 export class gpt3Plus {
     constructor(apiKey: string, precentForContext: number, precentForConversations: number, promptOutputTokens: number, contextSentenceSplitor: string, completationModelMaxTokens: number, useContextOnlyTheSimilarityGreaterThanOrEqualTo: number) {
         (async () => {
-            await setUp(apiKey, precentForContext, precentForConversations, promptOutputTokens, contextSentenceSplitor, completationModelMaxTokens, useContextOnlyTheSimilarityGreaterThanOrEqualTo)
+            //await setUp(apiKey, precentForContext, precentForConversations, promptOutputTokens, contextSentenceSplitor, completationModelMaxTokens, useContextOnlyTheSimilarityGreaterThanOrEqualTo)
         })
     }
 
