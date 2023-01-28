@@ -150,11 +150,15 @@ async function embeddingTheNewContext(embs: any): Promise<Object> {
         return embs[val] ===  undefined
     })
     let rs: any = {}
-    rs = await unembeddingSentences.reduce(async (rs, sentence) => {
+
+    for(const sentence of unembeddingSentences) {
+        if(sentence.trim().length === 0) {
+            continue
+        }
         const emb = await createEmbeddings(sentence)
         rs[sentence] = emb
-        return rs
-    },rs)
+    }
+    
     return rs
 }
 
