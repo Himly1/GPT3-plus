@@ -12,7 +12,7 @@ So with this package the dataset and the conversations will be convert to Embedd
 
 # Useage
 ## How do I add new context?
-> it simple you need to create a txt file called "context.txt" at your project root folder, then you can add whatever you want.
+> its simple you need to create a txt file called "context.txt" at your project root folder, then you can add whatever you want.
 
 ## Do I need to care about the conversations?
 > No, you dont need to, because the conversations is handled by the package itslef.
