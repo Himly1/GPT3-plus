@@ -39,7 +39,7 @@ async function test() {
 
 test()
 ```
-The output of above code without any content is 
+The output of above code without any context 
 ```
 I'm not too familiar with ZhengMa, but I'm open to learning more about it. Can you tell me more about it?
 ```
