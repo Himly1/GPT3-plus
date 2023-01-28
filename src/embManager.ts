@@ -2,9 +2,10 @@ import * as fs from 'fs';
 import { createEmbeddings } from './openAiWrapper';
 import { dot } from 'mathjs';
 import * as path from 'path'
+import {cwd} from 'process'
 
 let contextEmb: any = {};
-let conversationsEmb: any[][] = [[]];
+let conversationsEmb: any[][] = [];
 let precentageOfContext: number = 0.5;
 let precentageOfConversations: number = 0.3;
 let splitorForSplitContextAsSentence: string = '。';
@@ -133,7 +134,7 @@ export async function storeTheNewConversation(question: string, answer: string):
   await writeConversationsEmbToLocal();
 }
 
-const pathOfContext = path.join(__dirname, '..','./context.txt');
+const pathOfContext = path.resolve(cwd(), "context.txt")
 async function createContextTxtFile() {
   fs.writeFileSync(pathOfContext, "", {encoding: 'utf-8'})
 }
@@ -172,7 +173,7 @@ async function embeddingTheNewContext(embs: any): Promise<Object> {
   return rs;
 }
 
-const pathOfContextEmb = path.join(__dirname, '..','./contextEmb.json');
+const pathOfContextEmb = path.resolve(cwd(), 'contextEmb.json')
 async function writeContextEmbToLocal(embs: Object): Promise<void> {
   fs.writeFileSync(pathOfContextEmb, JSON.stringify(embs), { encoding: 'utf-8' });
 }
@@ -189,7 +190,7 @@ async function loadContextEmb(): Promise<Object> {
   return Promise.resolve(embs);
 }
 
-const pathOfConversationsEmb = path.join(__dirname, '..', './conversationsEmb.json');
+const pathOfConversationsEmb = path.resolve(cwd(), 'conversationsEmb.json')
 async function loadConversationsEmb(): Promise<any[][]> {
   if(!fs.existsSync(pathOfConversationsEmb)) {
     await writeConversationsEmbToLocal()
