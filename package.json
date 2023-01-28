@@ -1,5 +1,5 @@
 {
-  "name": "cgtlgpt3",
+  "name": "gpt3Plus",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
    "start:dev": "npx nodemon"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["openai", "gpt3"],
+  "author": "zhengMa",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^18.11.18",
